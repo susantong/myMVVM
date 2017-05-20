@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>实现MVVM基础框架</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<div id="app">
+		<div s-text="title"></div>
+		<div s-show="show">show it</div>
+		<div s-if="if">
+			<div s-text="title"></div>
+		</div>
+		<div s-text="message"></div>
+		<input type="text" s-model="message">
+	</div>
+
+	<script type="text/javascript" src="../src/vue.js"></script>
+	<script type="text/javascript">
+		(function() {
+			var obj = {
+				title: 'hello',
+				show: false,
+				if: true,
+				message: 111
+			};
+
+			new vue({
+				el: '#app',
+				data: obj
+			});
+		})();
+	</script>
+</body>
+</html>

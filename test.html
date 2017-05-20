@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>object.defineProperty</title>
+</head>
+<body>
+
+	<script type="text/javascript">
+		var obj = {test: 'ok'};
+		var val = obj.test;
+		Object.defineProperty(obj, 'test', {
+			get: function() {
+				return val;
+			},
+			set: function(newVal) {
+				val = newVal;
+				console.log('xx');
+			}
+
+		});
+		console.log(obj.test);
+		obj.test = 'hello';
+
+		var test = '{{text}}';
+		var reg = /\{\{*\}\}/gi;
+		if(test.search(reg) !== -1){
+			console.log(test.search(reg));
+			console.log('yes');
+		}
+		console.log(test.match(/\{\{(\S*)\}\}/)[1]);
+		console.log(test.replace(/\{\{(\S*)\}\}/g, 'ok'));
+		
+	</script>
+</body>
+</html>
