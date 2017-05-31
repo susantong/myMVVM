@@ -8,6 +8,14 @@
 	<div id="app">
 		<div s-text="title"></div>
 		<div s-show="show">show it</div>
+		<div>{{title}}</div>
+		<div>
+			<div>{{message}}</div>
+		</div>
+		<ul>
+			<li  s-for="lists in list">{{lists.name}}</li>
+		</ul>
+		<div>{{text}}{{message}}</div>
 		<div s-if="if">
 			<div s-text="title"></div>
 		</div>
@@ -22,7 +30,12 @@
 				title: 'hello',
 				show: false,
 				if: true,
-				message: 111
+				message: 111,
+				text: 'hihihi',
+				list: [
+					{name: 21},
+					{name: 30}
+				]
 			};
 
 			new vue({
