@@ -95,7 +95,9 @@ function vue(oop) {
 			var len = item.muscha.string.length;
 			switch(len) {
 				case 0:
-					str = data[item.muscha.text[0]];
+					for (var i = 0; i < item.muscha.text.length; i++) {
+						str += data[item.muscha.text[i]];
+					}
 					break;
 				case 1:
 					str = data[item.muscha.text[0]] + item.muscha.string[0];
@@ -120,12 +122,12 @@ function vue(oop) {
 					str += item.muscha.string[j];
 			}
 		}
-		return str;
-		//item.node.innerHTML = str;	
+		return str;	
 	}
 
 	this.toChange = function(item, attr, content) {
 		var node = item.node;
+		var that = this;
 		switch(attr) {
 
 			case 's-text':
@@ -155,7 +157,34 @@ function vue(oop) {
 				break;
 
 			case 's-for':
-				console.log(content);
+				var items = data[item.list];
+				var fragment = document.createDocumentFragment();
+				if (content) {
+					for (var i = 0, len = items.length; i < len; i++) {
+						var dom = document.createElement(item.node
+							.nodeName.toLowerCase());
+						dom.innerHTML = items[i][content];
+						fragment.appendChild(dom);
+					}
+					if (item.parentNode) {
+						var dom = document.createElement(item.node
+							.nodeName.toLowerCase());
+						item.parentNode.innerHTML = '';
+						item.parentNode.appendChild(fragment);
+					} else{
+						if (item.nextElementSibling === undefined) {
+							item.nextElementSibling = item.node.nextElementSibling;
+							if (item.node.nextElementSibling === null) {
+								item.node.parentNode.insertBefore(fragment, item.node);
+								//console.log(item.node.parentNode.lastElementChild);
+								item.node.parentNode.removeChild(item.node.parentNode.lastElementChild);
+							} else { 
+								item.node.nextElementSibling.parentNode.insertBefore(fragment, item.node);
+								item.node.nextElementSibling.parentNode.removeChild(item.node);
+							}
+						}
+					}
+				}
 				break;
 
 		};
@@ -170,15 +199,24 @@ function vue(oop) {
 			vueArr.forEach(function(attr) {
 				if (item[attr]) {
 					var content = data[item[attr]];
+					//console.log(attr);
 					if (attr === 's-for') {
 						var value = item[attr].replace(/(^\s*)|(\s*$)/g, '');
 						var arr = value.split(' ');
-						var list = that.muscha(item.node.innerHTML);
+						var list = item.seralize ? item.seralize : item.seralize = that.muscha(item.node.innerHTML);
+					
 						if (arr.length > 1) {
-							item.list = arr[0];
-							//console.log((/^\..*$/.exec(list.text[0]))[1]);
+							var compaire = arr[0];
+							item.list = arr[2];
+							var str = /[\w]*\./.exec(list.text[0])[0];
+							str = str.slice(0, str.length-1);
+							if (compaire === str) {
+								content = (/\.[\w]*/.exec(list.text[0]))[0].substring(1);
+								//console.log(content);
+							} else {
+								content = '';
+							}
 						}
-						//console.log(list);
 					}
 					that.toChange(item, attr, content);
 				}
