@@ -1,6 +1,7 @@
 function vue(oop) {
 	var node = document.querySelector(oop.el);
 	var data = oop.data;
+	var methods = oop.methods;
 	var vueArr = ['s-text', 's-show', 's-if', 's-model', 's-for'];//指令存储数组
 
 	this.cache = [];
@@ -84,6 +85,18 @@ function vue(oop) {
 					data[node.getAttribute(attr)] = event.target.value;
 				};
 			});
+
+			var attributes = node.attributes;
+			attributes = [].slice.call(attributes);
+			var reg = /(\@)|(s-on:)/g;
+			temp.event = [];
+			for (var i = 0; i < attributes.length; i++) {
+				if (reg.test(attributes[i].name)) {
+					var len = attributes[i].name.match(reg)[0].length;
+					var type = attributes[i].name.substring(len);
+					temp.event.push({type: type, event: attributes[i].value});
+				}
+			}
 			return temp;
 		});
 	};
@@ -164,6 +177,11 @@ function vue(oop) {
 						var dom = document.createElement(item.node
 							.nodeName.toLowerCase());
 						dom.innerHTML = items[i][content];
+						if (item.event) {
+							for (var j = 0; j < item.event.length; j++) {
+								dom.addEventListener(item.event[j].type, that.eventProcess(methods[item.event[j].event]), false);
+							}
+						}
 						fragment.appendChild(dom);
 					}
 					if (item.parentNode) {
@@ -225,8 +243,19 @@ function vue(oop) {
 			if (item.muscha) {
 				item.node.innerHTML = that.strSplit(item);
 			}
+			if (item.event) {
+				for (var i = 0; i < item.event.length; i++) {
+					//console.log(methods[item.event[i].event]);
+					item.node.addEventListener(item.event[i].type, that.eventProcess(methods[item.event[i].event]), false);
+				}
+			}
 		});
 	};
+
+	this.eventProcess = function(fn) {
+
+		return fn.bind(oop);
+	}
 
 	this.watch = function(obj, callback) {
 		this.$observeObj = function() {

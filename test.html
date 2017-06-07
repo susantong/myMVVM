@@ -103,6 +103,13 @@
 		}
 
 		console.log(check('list.name'));
+
+		var m = '-von:click';
+		var n = 'click';
+		var regs = /(\@)|(v-on:)/g;
+		var reg = /v-on:/g;
+		console.log(regs.exec(n));
+		console.log(regs.test(n));
 	</script>
 </body>
 </html>

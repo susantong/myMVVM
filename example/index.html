@@ -8,21 +8,21 @@
 	<div id="app">
 		<div s-text="title"></div>
 		<div s-show="show">show it</div>
-		<div>{{title}}</div>
+		<div s-on:click="remove">{{title}}</div>
 		<div>
 			<div>{{message}}</div>
 		</div>
 		<ul>
-			<li  s-for="lists in list">{{lists.name}}</li>
+			<li  s-for="lists in list" s-on:click="removeIt">{{lists.name}}</li>
 		</ul>
-		<p s-for="arr in arr">{{arr.sex}}</p>
+		<p s-for="arr in arr" s-on:click="removeIt">{{arr.sex}}</p>
 		<div>{{text}}{{message}}</div>
 		<div s-if="if">
-			<div s-text="title"></div>
+			<div s-text="title" s-on:click="removeIt"></div>
 		</div>
 		<div s-text="message"></div>
 		<input type="text" s-model="message">
-		<div s-for="arr in arr">{{arr.sex}}</div>
+		<div s-for="arr in arr" s-on:click="removeIt">{{arr.sex}}</div>
 	</div>
 
 	<script type="text/javascript" src="../src/vue.js"></script>
@@ -46,7 +46,15 @@
 
 			new vue({
 				el: '#app',
-				data: obj
+				data: obj,
+				methods: {
+					remove: function() {
+						console.log(this.data.show);
+					},
+					removeIt: function(event) {
+						event.target.parentNode.removeChild(event.target);
+					}
+				}
 			});
 		})();
 	</script>
